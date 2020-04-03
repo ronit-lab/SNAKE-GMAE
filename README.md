@@ -1,1 +1,1 @@
-# SNAKE-GMAE
+# SNAKE-GAME
