@@ -95,7 +95,7 @@ def runGame():
             else:
               directionList = calcDirection(PATH)
         else:
-            del snake[-1] # remove worm's tail segment
+            del snake[-1]
 
 
         lastDirection = direction
@@ -297,7 +297,7 @@ def checkSmartTurn(worm,listOfNo,direction1,direction2):
 
 def findBetterDirection(worm, direction,lastWall):
     listOfNo = list(worm)
-    smartTurn = False   #dont kill yourself in the corner 
+    smartTurn = False   
     if direction == UP:
         areaLeft = calcArea({'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y']},worm,lastWall)
         areaRight = calcArea({'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y']},worm,lastWall)
@@ -500,8 +500,8 @@ def mainCalculation(worm,apple,softCalculation):
   discoverEdge = []
   newPoints = []
   exhaustedPoints = []
-  numberOfPoints = 1         #if all point tested go back one point
-  findingPath = True  #false
+  numberOfPoints = 1         
+  findingPath = True  
   listOfNo = getListOfNo(worm)
   softListOfNo = getSoftListOfNo(worm)
   softListOfNo.extend(softwindow)
@@ -517,7 +517,7 @@ def mainCalculation(worm,apple,softCalculation):
   while(findingPath and softCalculation):
     lastPoint = discoverEdge[-1]
     newPoints = getNeighborhood(lastPoint)
-    newPoints = sorted(newPoints, key = lambda k: calcDistance(k,apple), reverse = True)  #sort newPoints
+    newPoints = sorted(newPoints, key = lambda k: calcDistance(k,apple), reverse = True)  
     numberOfPoints = len(newPoints)
     for point in newPoints:
       if point in softListOfNo:
@@ -587,11 +587,11 @@ def mainCalculation(worm,apple,softCalculation):
     
 
 
-  ##WHEN DISCOVER EDGE IS EMPTY, TRY FIND TAIL
-  pointsToPath.append(apple)       #adding in the last point 
+  
+  pointsToPath.append(apple)       
   return pointsToPath
 
-def getNeighborhood(point):      ### NOT NEGATIVE
+def getNeighborhood(point):      
   neighborhood = []
   if point['x'] < CELLWIDTH:
     neighborhood.append({'x':point['x']+1,'y':point['y']})
@@ -830,11 +830,11 @@ def showGameOverScreen():
     drawPressKeyMsg()
     pygame.display.update()
     pygame.time.wait(500)
-    checkForKeyPress() # clear out any key presses in the event queue
+    checkForKeyPress() 
 
     while True:
         if checkForKeyPress():
-            pygame.event.get() # clear event queue
+            pygame.event.get() 
             return
 
 def drawScore(score):
@@ -864,9 +864,9 @@ def drawApple(coord,lastApple):
 
 
 def drawGrid():
-    for x in range(0, WIDTH, SIZE): # draw vertical lines
+    for x in range(0, WIDTH, SIZE): 
         pygame.draw.line(DISPLAY, YELLOW, (x, 0), (x, HEIGHT))
-    for y in range(0, HEIGHT, SIZE): # draw horizontal lines
+    for y in range(0, HEIGHT, SIZE): 
         pygame.draw.line(DISPLAY, YELLOW, (0, y), (WIDTH, y))
 
 pygame.quit()
