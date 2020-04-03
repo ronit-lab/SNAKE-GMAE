@@ -6,8 +6,8 @@ HEIGHT = 1200
 SIZE = 60
 assert WIDTH% SIZE== 0 
 assert HEIGHT% SIZE== 0
-CELLWIDTH = int(WIDTH / SIZE)
-CELLHEIGHT = int(HEIGHT / SIZE)
+windowwidth = int(WIDTH / SIZE)
+windowheigth = int(HEIGHT / SIZE)
 WHITE     = (255, 255, 255)
 BLACK     = (  0,   0,   0)
 RED       = (255,   0,   0)
@@ -72,7 +72,7 @@ def runGame():
                   if event.key == K_ESCAPE:
                       terminate()
        
-        if snake[HEAD]['x'] == -1 or snake[HEAD]['x'] == CELLWIDTH or snake[HEAD]['y'] == -1 or snake[HEAD]['y'] == CELLHEIGHT:
+        if snake[HEAD]['x'] == -1 or snake[HEAD]['x'] == windowwidth or snake[HEAD]['y'] == -1 or snake[HEAD]['y'] == windowheigth:
             terminate()
             return 
         
@@ -83,7 +83,7 @@ def runGame():
         if snake[HEAD]['x'] == apple['x'] and snake[HEAD]['y'] == apple['y']:
            
             lastApple = apple
-            apple = getRandomLocation(snake) 
+            apple = getlocation(snake) 
             drawApple(apple,lastApple)                        
             PATH = calculatePath(snake,apple,True)  
             if not PATH:
@@ -149,7 +149,7 @@ def runGame():
         nextHead = findNewHead(directionList[0],snake)
         
         if status:
-          if AreaIsTooSmall(CELLWIDTH,nextHead, snake, lastWall):      
+          if AreaIsTooSmall(windowwidth,nextHead, snake, lastWall):      
             lastWall = 0
             directionList = findNextDirection(snake, directionList[0],0)
             print('almost died, recalcualting...',snake[0],directionList)          
@@ -166,17 +166,17 @@ def runGame():
         pygame.display.update()
         A.tick(F)
 
-def calcOnlyDirection(worm):
+def calcOnlyDirection(snaky):
     count = 4 
-    ways = getNeighborhood(worm[0])
+    ways = getNeighborhood(snaky[0])
     theWay = 0
-    for each in ways:
-      if each in worm:
+    for z in ways:
+      if z in snaky:
         count = count - 1
       else:
-        theWay = each
+        theWay = z
     if count == 1:
-      return calcDirection([worm[0],theWay])
+      return calcDirection([snaky[0],theWay])
     else:
       return 0
 
@@ -184,59 +184,59 @@ def getNextwindow(lastWall):
     walls = []
 
     loopcount = 0 
-    for _ in range(CELLHEIGHT):
+    for _ in range(windowheigth):
       if lastWall == RIGHT:
         walls.append({'x':0, 'y':loopcount})
       if lastWall == LEFT:
-        walls.append({'x':CELLWIDTH-1, 'y':loopcount})
+        walls.append({'x':windowwidth-1, 'y':loopcount})
       loopcount = loopcount + 1
    
     loopcount = 0 
-    for _ in range(CELLWIDTH):
+    for _ in range(windowwidth):
       if lastWall == DOWN:
         walls.append({'x':loopcount, 'y':0})
       if lastWall == UP:
-        walls.append({'x':loopcount, 'y':CELLHEIGHT-1})
+        walls.append({'x':loopcount, 'y':windowheigth-1})
       loopcount = loopcount + 1
     return walls
 
-def safeToGo(worm,direction,lastWall):
-    listOfNo = window + worm
+def safeToGo(snaky,direction,lastWall):
+    listOfNo = window + snaky
     listOfNo.extend(getNextwindow(lastWall))
-    head = worm[0]
-    forward = worm[0]
-    forwardLeft = worm[0]
-    forwardRight = worm[0]
-    left = worm[0]
-    right = worm[0]
+    head = snaky[0]
+    forward = snaky[0]
+    forwardLeft = snaky[0]
+    forwardRight = snaky[0]
+    left = snaky[0]
+    right = snaky[0]
     if direction == UP:
-        newHead = {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] - 1}
-        forward = {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] - 2}
-        forwardLeft = {'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y'] - 1}
-        forwardRight = {'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y'] - 1}
-        left = {'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y']}
-        right = {'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y']}
+        newHead = {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] - 1}
+        forward = {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] - 2}
+        forwardLeft = {'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y'] - 1}
+        forwardRight = {'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y'] - 1}
+        left = {'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y']}
+        right = {'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y']}
     elif direction == DOWN:
-        newHead = {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] + 1}
-        forward = {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] + 2}
-        forwardLeft = {'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y'] + 1}
-        forwardRight = {'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y'] + 1}
-        left = {'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y']}
-        right = {'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y']}
+        newHead = {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] + 1}
+        forward = {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] + 2}
+        forwardLeft = {'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y'] + 1}
+        forwardRight = {'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y'] + 1}
+        left = {'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y']}
+        right = {'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y']}
     elif direction == LEFT:
-        newHead = {'x': worm[HEAD]['x'] - 1, 'y': worm[HEAD]['y']}
-        forward = {'x': worm[HEAD]['x'] - 2, 'y': worm[HEAD]['y']}
-        forwardLeft = {'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y'] + 1}
-        forwardRight = {'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y'] - 1}
-        left = {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']+1}
-        right = {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']-1}
+        newHead = {'x': snaky[HEAD]['x'] - 1, 'y': snaky[HEAD]['y']}
+        forward = {'x': snaky[HEAD]['x'] - 2, 'y': snaky[HEAD]['y']}
+        forwardLeft = {'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y'] + 1}
+        forwardRight = {'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y'] - 1}
+        left = {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']+1}
+        right = {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']-1}
     elif direction == RIGHT:
-        newHead = {'x': worm[HEAD]['x'] + 1, 'y': worm[HEAD]['y']}
-        forward = {'x': worm[HEAD]['x'] + 2, 'y': worm[HEAD]['y']}
-        forwardLeft = {'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y'] - 1}
-        forwardRight = {'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y'] + 1}
-        left = {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']-1}
-        right = {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']+1}
+        newHead = {'x': snaky[HEAD]['x'] + 1, 'y': snaky[HEAD]['y']}
+        forward = {'x': snaky[HEAD]['x'] + 2, 'y': snaky[HEAD]['y']}
+        forwardLeft = {'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y'] - 1}
+        forwardRight = {'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y'] + 1}
+        left = {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']-1}
+        right = {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']+1}
 
    
     if (forwardLeft in listOfNo and not left in listOfNo) or (forwardRight in listOfNo and not right in listOfNo):
@@ -247,8 +247,8 @@ def safeToGo(worm,direction,lastWall):
     waysToGo = []
     waysToGo = getNeighborhood(newHead)
     count = len(waysToGo)
-    for each in waysToGo:
-      if each in listOfNo:
+    for z in waysToGo:
+      if z in listOfNo:
         count = count - 1
     if count < 1:
       return False
@@ -257,145 +257,145 @@ def safeToGo(worm,direction,lastWall):
     else:
       return True
 
-def checkLastWall(worm):
-    x = worm[0]['x']
-    y = worm[0]['y']
+def checkLastWall(snaky):
+    x = snaky[0]['x']
+    y = snaky[0]['y']
     if x == 0:
       return LEFT
-    elif x == CELLWIDTH - 1:
+    elif x == windowwidth - 1:
       return RIGHT
     elif y == 0:
       return UP
-    elif y == CELLHEIGHT -1:
+    elif y == windowheigth -1:
       return DOWN
     else:
       return 0
 
-def checkSmartTurn(worm,listOfNo,direction1,direction2):
+def checkSmartTurn(snaky,listOfNo,direction1,direction2):
     if direction1 == UP or direction1 == DOWN:
       if direction2 == RIGHT:
-        if {'x': worm[HEAD]['x']+3, 'y': worm[HEAD]['y']} in listOfNo and (not {'x': worm[HEAD]['x']+2, 'y': worm[HEAD]['y']} in listOfNo):
+        if {'x': snaky[HEAD]['x']+3, 'y': snaky[HEAD]['y']} in listOfNo and (not {'x': snaky[HEAD]['x']+2, 'y': snaky[HEAD]['y']} in listOfNo):
           return True
         else:
           return False
       if direction2 == LEFT:
-        if {'x': worm[HEAD]['x']-3, 'y': worm[HEAD]['y']} in listOfNo and (not {'x': worm[HEAD]['x']-2, 'y': worm[HEAD]['y']} in listOfNo):
+        if {'x': snaky[HEAD]['x']-3, 'y': snaky[HEAD]['y']} in listOfNo and (not {'x': snaky[HEAD]['x']-2, 'y': snaky[HEAD]['y']} in listOfNo):
           return True
         else:
           return False
     if direction1 == LEFT or direction1 == RIGHT:
       if direction2 == UP:
-        if {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']-3} in listOfNo and (not {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']-2} in listOfNo):
+        if {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']-3} in listOfNo and (not {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']-2} in listOfNo):
           return True
         else:
           return False
       if direction2 == DOWN:
-        if {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']+3} in listOfNo and (not {'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']+2} in listOfNo):
+        if {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']+3} in listOfNo and (not {'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']+2} in listOfNo):
           return True
         else:
           return False    
 
-def findBetterDirection(worm, direction,lastWall):
-    listOfNo = list(worm)
+def findBetterDirection(snaky, direction,lastWall):
+    listOfNo = list(snaky)
     smartTurn = False   
     if direction == UP:
-        areaLeft = calcArea({'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y']},worm,lastWall)
-        areaRight = calcArea({'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y']},worm,lastWall)
+        areaLeft = calcArea({'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y']},snaky,lastWall)
+        areaRight = calcArea({'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y']},snaky,lastWall)
         if areaLeft == 0 and areaRight == 0:
           return [direction]
-        areaStraight = calcArea({'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']-1},worm,lastWall)
+        areaStraight = calcArea({'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']-1},snaky,lastWall)
         maxArea = max(areaLeft,areaRight,areaStraight)
         print ('Options:', 'left:',areaLeft,'right:',areaRight,'straight:',areaStraight)
         if maxArea == areaStraight:
           return [direction]
         elif maxArea == areaLeft:
-          if checkSmartTurn(worm,listOfNo,direction,LEFT):
+          if checkSmartTurn(snaky,listOfNo,direction,LEFT):
             print('Smart Turn Enabled')
             return [LEFT, LEFT]
           else:
             return [LEFT, DOWN]
         else:
-          if checkSmartTurn(worm,listOfNo,direction,RIGHT):
+          if checkSmartTurn(snaky,listOfNo,direction,RIGHT):
             print('Smart Turn Enabled')
             return [RIGHT, RIGHT]
           else:
             return [RIGHT,DOWN]
 
     if direction == DOWN:
-        areaLeft = calcArea({'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y']},worm,lastWall)
-        areaRight = calcArea({'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y']},worm,lastWall)
+        areaLeft = calcArea({'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y']},snaky,lastWall)
+        areaRight = calcArea({'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y']},snaky,lastWall)
         if areaLeft == 0 and areaRight == 0:
           return [direction]
-        areaStraight = calcArea({'x': worm[HEAD]['x'], 'y': worm[HEAD]['y']+1},worm,lastWall)
+        areaStraight = calcArea({'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y']+1},snaky,lastWall)
         maxArea = max(areaLeft,areaRight,areaStraight)
         print ('Options:','left:',areaLeft,'right:',areaRight,'straight:',areaStraight)
         if maxArea == areaStraight:
           return [direction]
         elif areaLeft == maxArea:
-          if checkSmartTurn(worm,listOfNo,direction,LEFT):
+          if checkSmartTurn(snaky,listOfNo,direction,LEFT):
             print('Smart Turn Enabled')
             return [LEFT, LEFT]
           else:
             return [LEFT, UP]
         else:
-          if checkSmartTurn(worm,listOfNo,direction,RIGHT):
+          if checkSmartTurn(snaky,listOfNo,direction,RIGHT):
             print('Smart Turn Enabled')
             return [RIGHT, RIGHT]
           else:
             return [RIGHT,UP]
 
     elif direction == LEFT:
-        areaUp = calcArea({'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] - 1},worm,lastWall)
-        areaDown = calcArea({'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] + 1},worm,lastWall)
+        areaUp = calcArea({'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] - 1},snaky,lastWall)
+        areaDown = calcArea({'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] + 1},snaky,lastWall)
         if areaUp == 0 and areaDown == 0:
           return [direction]
-        areaStraight = calcArea({'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y']},worm,lastWall)
+        areaStraight = calcArea({'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y']},snaky,lastWall)
         maxArea = max(areaStraight,areaUp,areaDown)
         print ('Options:','up:',areaUp,'down:',areaDown,'straight:',areaStraight)
         if maxArea == areaStraight:
           return [direction]       
         elif maxArea == areaUp:
-          if checkSmartTurn(worm,listOfNo,direction,UP):
+          if checkSmartTurn(snaky,listOfNo,direction,UP):
             print('Smart Turn Enabled')
             return [UP, UP]
           else:
             return [UP,RIGHT]
         else:
-          if checkSmartTurn(worm,listOfNo,direction,DOWN):
+          if checkSmartTurn(snaky,listOfNo,direction,DOWN):
             print('Smart Turn Enabled')
             return [DOWN, DOWN]
           else:
             return [DOWN,RIGHT]
 
     elif direction == RIGHT:
-        areaUp = calcArea({'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] - 1},worm,lastWall)
-        areaDown = calcArea({'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] + 1},worm,lastWall)
+        areaUp = calcArea({'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] - 1},snaky,lastWall)
+        areaDown = calcArea({'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] + 1},snaky,lastWall)
         if areaUp == 0 and areaDown == 0:
           return [direction]
-        areaStraight = calcArea({'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y']},worm,lastWall)
+        areaStraight = calcArea({'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y']},snaky,lastWall)
         maxArea = max(areaStraight,areaUp,areaDown)
         print ('Options:','up:',areaUp,'down:',areaDown,'straight:',areaStraight)
         if maxArea == areaStraight:
           return [direction]              
         elif areaUp ==maxArea:
-          if checkSmartTurn(worm,listOfNo,direction,UP):
+          if checkSmartTurn(snaky,listOfNo,direction,UP):
             print('Smart Turn Enabled')
             return [UP, UP]
           else:
             return [UP,LEFT]
         else:
-          if checkSmartTurn(worm,listOfNo,direction,DOWN):
+          if checkSmartTurn(snaky,listOfNo,direction,DOWN):
             print('Smart Turn Enabled')
             return [DOWN, DOWN]
           else:
             return [DOWN,LEFT]
 
-def findNextDirection(worm, direction,lastWall):
-    listOfNo = list(worm)
-    areaLeft = calcArea({'x': worm[HEAD]['x']-1, 'y': worm[HEAD]['y']},worm,lastWall)
-    areaRight = calcArea({'x': worm[HEAD]['x']+1, 'y': worm[HEAD]['y']},worm,lastWall)
-    areaUp = calcArea({'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] - 1},worm,lastWall)
-    areaDown = calcArea({'x': worm[HEAD]['x'], 'y': worm[HEAD]['y'] + 1},worm,lastWall)
+def findNextDirection(snaky, direction,lastWall):
+    listOfNo = list(snaky)
+    areaLeft = calcArea({'x': snaky[HEAD]['x']-1, 'y': snaky[HEAD]['y']},snaky,lastWall)
+    areaRight = calcArea({'x': snaky[HEAD]['x']+1, 'y': snaky[HEAD]['y']},snaky,lastWall)
+    areaUp = calcArea({'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] - 1},snaky,lastWall)
+    areaDown = calcArea({'x': snaky[HEAD]['x'], 'y': snaky[HEAD]['y'] + 1},snaky,lastWall)
     maxArea = max(areaLeft,areaRight,areaUp,areaDown)
     if maxArea == areaUp:
       return [UP]
@@ -406,9 +406,9 @@ def findNextDirection(worm, direction,lastWall):
     else:
       return [RIGHT]
 
-def calcArea(point, worm, lastWall):
+def calcArea(point, snaky, lastWall):
     nextWall = getNextwindow(lastWall)
-    if point in worm or point in window or point in nextWall:
+    if point in snaky or point in window or point in nextWall:
       return 0
     tailBonus = 0
     q = []
@@ -416,18 +416,18 @@ def calcArea(point, worm, lastWall):
     searchPoints.append(point)
     while (searchPoints):
       i = searchPoints.pop()
-      for each in getNeighborhood(i):
-        if not each in q:
-          if not (each in worm or each in window or point in nextWall):
-            searchPoints.append(each)
-        if each == worm[-1]:
+      for z in getNeighborhood(i):
+        if not z in q:
+          if not (z in snaky or z in window or point in nextWall):
+            searchPoints.append(z)
+        if z == snaky[-1]:
           tailBonus = 200
       q.append(i)
     return len(q)+tailBonus
 
-def AreaIsTooSmall(bound,point, worm, lastWall):
+def AreaIsTooSmall(bound,point, snaky, lastWall):
     nextWall = getNextwindow(lastWall)
-    if point in worm or point in window or point in nextWall:
+    if point in snaky or point in window or point in nextWall:
       return True
     tailBonus = 0
     q = []
@@ -435,53 +435,53 @@ def AreaIsTooSmall(bound,point, worm, lastWall):
     searchPoints.append(point)
     while (searchPoints):
       i = searchPoints.pop()
-      for each in getNeighborhood(i):
-        if not each in q:
-          if not (each in worm or each in window or point in nextWall):
-            searchPoints.append(each)
-        if each == worm[-1]:
+      for z in getNeighborhood(i):
+        if not z in q:
+          if not (z in snaky or z in window or point in nextWall):
+            searchPoints.append(z)
+        if z == snaky[-1]:
           tailBonus = 200
       q.append(i)
       if (len(q) + tailBonus) > bound:
         return False
     return True
 
-def calcCost(point,worm):
+def calcCost(point,snaky):
     print ('calculating cost of point', point)
     neibors = getNeighborhood(point)
-    for each in neibors:
-      if each in worm[1:]:
-        return worm.index(each)
+    for z in neibors:
+      if z in snaky[1:]:
+        return snaky.index(z)
     return 999
 
 def calcDirection(path):
     '''Converting point-path to step by step direction'''
-    lastPoint = path[0]
+    endpoint = path[0]
     directions = []
     nextDirection = ''
-    for currentPoint in path:
-      if (currentPoint['x'] > lastPoint['x']):
+    for presentpoint in path:
+      if (presentpoint['x'] > endpoint['x']):
         nextDirection = RIGHT
-      elif (currentPoint['x'] < lastPoint['x']):
+      elif (presentpoint['x'] < endpoint['x']):
         nextDirection = LEFT
       else:
-        if (currentPoint['y'] > lastPoint['y']):
+        if (presentpoint['y'] > endpoint['y']):
           nextDirection = DOWN
-        elif (currentPoint['y'] < lastPoint['y']):
+        elif (presentpoint['y'] < endpoint['y']):
           nextDirection = UP
         else:
         
           continue
     
-      lastPoint = currentPoint
+      endpoint = presentpoint
       directions.append(nextDirection)
     
     return directions
 
-def calculatePath(worm,apple,softCalculation):
-  oldWorm = list(worm)
+def calculatePath(snaky,apple,softCalculation):
+  oldWorm = list(snaky)
 
-  path = mainCalculation(worm,apple,softCalculation)
+  path = mainCalculation(snaky,apple,softCalculation)
   if not path:
     return []
   else:
@@ -495,28 +495,28 @@ def calculatePath(worm,apple,softCalculation):
     else:
       return path
 
-def mainCalculation(worm,apple,softCalculation):
+def mainCalculation(snaky,apple,softCalculation):
   pointsToPath= []
   discoverEdge = []
   newPoints = []
   exhaustedPoints = []
   numberOfPoints = 1         
   findingPath = True  
-  listOfNo = getListOfNo(worm)
-  softListOfNo = getSoftListOfNo(worm)
+  listOfNo = getList(snaky)
+  softListOfNo = getSoftListOfNo(snaky)
   softListOfNo.extend(softwindow)
-  discoverEdge.append(worm[0])
-  exhaustedPoints.append(worm[0])
-  lastPoint = discoverEdge[-1]
-  pointsToPath.append(lastPoint)
+  discoverEdge.append(snaky[0])
+  exhaustedPoints.append(snaky[0])
+  endpoint = discoverEdge[-1]
+  pointsToPath.append(endpoint)
 
   if (apple in softwindow) or (apple in softListOfNo):
     softCalculation = False
 
   
   while(findingPath and softCalculation):
-    lastPoint = discoverEdge[-1]
-    newPoints = getNeighborhood(lastPoint)
+    endpoint = discoverEdge[-1]
+    newPoints = getNeighborhood(endpoint)
     newPoints = sorted(newPoints, key = lambda k: calcDistance(k,apple), reverse = True)  
     numberOfPoints = len(newPoints)
     for point in newPoints:
@@ -528,8 +528,8 @@ def mainCalculation(worm,apple,softCalculation):
         numberOfPoints = numberOfPoints -1
       else:                                
         discoverEdge.append(point)      
-        pointsToPath.append(lastPoint) 
-        exhaustedPoints.append(lastPoint)
+        pointsToPath.append(endpoint) 
+        exhaustedPoints.append(endpoint)
         #print (point)
       #exhaustedPoints.append(point)
     if numberOfPoints == 0:
@@ -550,16 +550,16 @@ def mainCalculation(worm,apple,softCalculation):
     exhaustedPoints = []
     numberOfPoints = 1       
     findingPath = True  
-    listOfNo = getListOfNo(worm)
-    discoverEdge.append(worm[0])
-    exhaustedPoints.append(worm[0])
-    lastPoint = discoverEdge[-1]
-    pointsToPath.append(lastPoint)
+    listOfNo = getList(snaky)
+    discoverEdge.append(snaky[0])
+    exhaustedPoints.append(snaky[0])
+    endpoint = discoverEdge[-1]
+    pointsToPath.append(endpoint)
 
   
     while(findingPath):
-      lastPoint = discoverEdge[-1]
-      newPoints = getNeighborhood(lastPoint)
+      endpoint = discoverEdge[-1]
+      newPoints = getNeighborhood(endpoint)
       newPoints = sorted(newPoints, key = lambda k: calcDistance(k,apple), reverse = True) 
       numberOfPoints = len(newPoints)
       for point in newPoints:
@@ -571,8 +571,8 @@ def mainCalculation(worm,apple,softCalculation):
           numberOfPoints = numberOfPoints -1
         else:                                
           discoverEdge.append(point)        
-          pointsToPath.append(lastPoint) 
-          exhaustedPoints.append(lastPoint)
+          pointsToPath.append(endpoint) 
+          exhaustedPoints.append(endpoint)
           #print (point)
         #exhaustedPoints.append(point)
       if numberOfPoints == 0:
@@ -593,11 +593,11 @@ def mainCalculation(worm,apple,softCalculation):
 
 def getNeighborhood(point):      
   neighborhood = []
-  if point['x'] < CELLWIDTH:
+  if point['x'] < windowwidth:
     neighborhood.append({'x':point['x']+1,'y':point['y']})
   if point['x'] > 0:
     neighborhood.append({'x':point['x']-1,'y':point['y']})
-  if point['y'] < CELLHEIGHT:
+  if point['y'] < windowheigth:
     neighborhood.append({'x':point['x'],'y':point['y']+1})
   if point['y'] >0:
     neighborhood.append({'x':point['x'],'y':point['y']-1})
@@ -607,35 +607,35 @@ def calcDistance(point, apple):
   distance = abs(point['x'] - apple['x']) + abs(point['y'] - apple['y'])
   return distance
 
-def getSoftListOfNo(worm):
+def getSoftListOfNo(snaky):
   listOfNo = []
-  listOfNo.extend(getWormSurroundings(worm))
+  listOfNo.extend(getWormSurroundings(snaky))
   #listOfNo.extend(softwindow)
   #remove duplicates
   return listOfNo 
 
 
-def getWormSurroundings(worm):
+def getWormSurroundings(snaky):
   listOfNo = []
-  headx = worm[0]['x']
-  heady = worm[0]['y']
+  headx = snaky[0]['x']
+  heady = snaky[0]['y']
   count = 0
-  for each in worm:
+  for z in snaky:
     if count == 0:
-      listOfNo.append(each)
+      listOfNo.append(z)
     else:
-      dist = abs (each['x'] - headx) + abs(each['y']-heady)
-      countFromBehind = len(worm) - count
+      dist = abs (z['x'] - headx) + abs(z['y']-heady)
+      countFromBehind = len(snaky) - count
       if dist < (countFromBehind+1):
-        listOfNo.append(each)
-        listOfNo.append({'x':each['x']+1,'y':each['y']})
-        listOfNo.append({'x':each['x']-1,'y':each['y']})
-        listOfNo.append({'x':each['x'],'y':each['y']+1})
-        listOfNo.append({'x':each['x'],'y':each['y']-1})
-        listOfNo.append({'x':each['x']+1,'y':each['y']+1})
-        listOfNo.append({'x':each['x']-1,'y':each['y']-1})
-        listOfNo.append({'x':each['x']-1,'y':each['y']+1})
-        listOfNo.append({'x':each['x']+1,'y':each['y']-1})
+        listOfNo.append(z)
+        listOfNo.append({'x':z['x']+1,'y':z['y']})
+        listOfNo.append({'x':z['x']-1,'y':z['y']})
+        listOfNo.append({'x':z['x'],'y':z['y']+1})
+        listOfNo.append({'x':z['x'],'y':z['y']-1})
+        listOfNo.append({'x':z['x']+1,'y':z['y']+1})
+        listOfNo.append({'x':z['x']-1,'y':z['y']-1})
+        listOfNo.append({'x':z['x']-1,'y':z['y']+1})
+        listOfNo.append({'x':z['x']+1,'y':z['y']-1})
     count = count + 1
   seen = set()
   newList = []
@@ -648,17 +648,17 @@ def getWormSurroundings(worm):
 
 
 
-def getListOfNo(worm):
+def getList(snaky):
   listOfNo = []
-  headx = worm[0]['x']
-  heady = worm[0]['y']
+  headx = snaky[0]['x']
+  heady = snaky[0]['y']
   count = 0
-  for each in worm:
-    dist = abs (each['x'] - headx) + abs(each['y']-heady)
-    countFromBehind = len(worm) - count
+  for z in snaky:
+    dist = abs (z['x'] - headx) + abs(z['y']-heady)
+    countFromBehind = len(snaky) - count
     count = count + 1 
     if dist < (countFromBehind+1):
-      listOfNo.append(each)
+      listOfNo.append(z)
   listOfNo.extend(window)
   #print ('List of No Go:')
   #print (listOfNo)
@@ -669,15 +669,15 @@ def findWall():
   walls = []
   #append LEFT RIGHT walls
   loopcount = 0 
-  for _ in range(CELLHEIGHT):
+  for _ in range(windowheigth):
     walls.append({'x':-1       , 'y':loopcount})
-    walls.append({'x':CELLWIDTH, 'y':loopcount})
+    walls.append({'x':windowwidth, 'y':loopcount})
     loopcount = loopcount + 1
   #append TOP BOTTOM walls
   loopcount = 0 
-  for _ in range(CELLWIDTH):
+  for _ in range(windowwidth):
     walls.append({'x':loopcount, 'y':-1})
-    walls.append({'x':loopcount, 'y':CELLHEIGHT})
+    walls.append({'x':loopcount, 'y':windowheigth})
     loopcount = loopcount + 1
   #print (walls)
   return walls
@@ -686,15 +686,15 @@ def findSoftWall():
   walls = []
   #append LEFT RIGHT walls
   loopcount = 0 
-  for _ in range(CELLHEIGHT):
+  for _ in range(windowheigth):
     walls.append({'x':0       , 'y':loopcount})
-    walls.append({'x':CELLWIDTH-1, 'y':loopcount})
+    walls.append({'x':windowwidth-1, 'y':loopcount})
     loopcount = loopcount + 1
   #append TOP BOTTOM walls
   loopcount = 0 
-  for _ in range(CELLWIDTH):
+  for _ in range(windowwidth):
     walls.append({'x':loopcount, 'y':0})
-    walls.append({'x':loopcount, 'y':CELLHEIGHT-1})
+    walls.append({'x':loopcount, 'y':windowheigth-1})
     loopcount = loopcount + 1
   #print (walls)
   return walls
@@ -704,10 +704,10 @@ def drawEdgeOfDiscovery(points):
     for point in points:
         x = point['x'] * SIZE
         y = point['y'] * SIZE
-        wormSegmentRect = pygame.Rect(x, y, SIZE, SIZE)
-        pygame.draw.rect(DISPLAY, ORANGE, wormSegmentRect)
-    lastPointRect = pygame.Rect(points[-1]['x']*SIZE, points[-1]['y']*SIZE, SIZE, SIZE)
-    pygame.draw.rect(DISPLAY, (255,255,255), wormSegmentRect)
+        snakySegmentRect = pygame.Rect(x, y, SIZE, SIZE)
+        pygame.draw.rect(DISPLAY, ORANGE, snakySegmentRect)
+    endpointRect = pygame.Rect(points[-1]['x']*SIZE, points[-1]['y']*SIZE, SIZE, SIZE)
+    pygame.draw.rect(DISPLAY, (255,255,255), snakySegmentRect)
     
 
 
@@ -760,7 +760,7 @@ def drawPressKeyMsg():
     DISPLAY.blit(pressKeySurf, pressKeyRect)
 
 
-def checkForKeyPress():
+def press():
     if len(pygame.event.get(QUIT)) > 0:
         terminate()
 
@@ -773,33 +773,33 @@ def checkForKeyPress():
 
 
 def showStartScreen():
-    titleFont = pygame.font.Font('freesansbold.ttf', 100)
-    titleSurf1 = titleFont.render('SNAKE GAME!', True, WHITE, DARKGREEN)
-    titleSurf2 = titleFont.render('SNAKE GAME!', True, GREEN)
+    tilteFonting = pygame.font.Font('freesansbold.ttf', 100)
+    titlesurfing1 = tilteFonting.render('SNAKE GAME!', True, WHITE, DARKGREEN)
+    titlesurfing2 = tilteFonting.render('SNAKE GAME!', True, GREEN)
 
-    degrees1 = 0
-    degrees2 = 0
+    angle1 = 0
+    angle2 = 0
     while True:
         DISPLAY.fill(BGCOLOR)
-        rotatedSurf1 = pygame.transform.rotate(titleSurf1, degrees1)
-        rotatedRect1 = rotatedSurf1.get_rect()
-        rotatedRect1.center = (WIDTH / 2, HEIGHT / 2)
-        DISPLAY.blit(rotatedSurf1, rotatedRect1)
+        rotatingsurfing1 = pygame.transform.rotate(titlesurfing1, angle1)
+        rotatingrectangle1 = rotatingsurfing1.get_rect()
+        rotatingrectangle1.center = (WIDTH / 2, HEIGHT / 2)
+        DISPLAY.blit(rotatingsurfing1, rotatingrectangle1)
 
-        rotatedSurf2 = pygame.transform.rotate(titleSurf2, degrees2)
-        rotatedRect2 = rotatedSurf2.get_rect()
-        rotatedRect2.center = (WIDTH / 2, HEIGHT / 2)
-        DISPLAY.blit(rotatedSurf2, rotatedRect2)
+        rotatingsurfing2 = pygame.transform.rotate(titlesurfing2, angle2)
+        rotatingrectangle2 = rotatingsurfing2.get_rect()
+        rotatingrectangle2.center = (WIDTH / 2, HEIGHT / 2)
+        DISPLAY.blit(rotatingsurfing2, rotatingrectangle2)
 
         drawPressKeyMsg()
 
-        if checkForKeyPress():
+        if press():
             pygame.event.get()
             return
         pygame.display.update()
         A.tick(F)
-        degrees1 += 3
-        degrees2 += 7
+        angle1 += 3
+        angle2 += 7
 
 
 def terminate():
@@ -809,55 +809,55 @@ def terminate():
     sys.exit()
 
 
-def getRandomLocation(worm):
-    location = {'x': random.randint(0, CELLWIDTH - 1), 'y': random.randint(0, CELLHEIGHT - 1)}
-    while(location in worm):
-        location = {'x': random.randint(0, CELLWIDTH - 1), 'y': random.randint(0, CELLHEIGHT - 1)}
+def getlocation(snaky):
+    location = {'x': random.randint(0, windowwidth - 1), 'y': random.randint(0, windowheigth - 1)}
+    while(location in snaky):
+        location = {'x': random.randint(0, windowwidth - 1), 'y': random.randint(0, windowheigth - 1)}
     return location
 
 
 def showGameOverScreen():
-    gameOverFont = pygame.font.Font('freesansbold.ttf', 150)
-    gameSurf = gameOverFont.render('Game', True, WHITE)
-    overSurf = gameOverFont.render('Over', True, WHITE)
-    gameRect = gameSurf.get_rect()
+    gamefonts = pygame.font.Font('freesansbold.ttf', 150)
+    gamesurfing = gamefonts.render('Game', True, WHITE)
+    overSurf = gamefonts.render('Over', True, WHITE)
+    gameRect = gamesurfing.get_rect()
     overRect = overSurf.get_rect()
     gameRect.midtop = (WIDTH / 2, 10)
     overRect.midtop = (WIDTH / 2, gameRect.height + 10 + 25)
 
-    DISPLAY.blit(gameSurf, gameRect)
+    DISPLAY.blit(gamesurfing, gameRect)
     DISPLAY.blit(overSurf, overRect)
     drawPressKeyMsg()
     pygame.display.update()
     pygame.time.wait(500)
-    checkForKeyPress() 
+    press() 
 
     while True:
-        if checkForKeyPress():
+        if press():
             pygame.event.get() 
             return
 
 def drawScore(score):
-    scoreSurf = FONT.render('Score: %s' % (score), True, WHITE)
-    scoreRect = scoreSurf.get_rect()
-    scoreRect.topleft = (WIDTH - 120, 10)
-    DISPLAY.blit(scoreSurf, scoreRect)
+    scoresurfing = FONT.render('Score: %s' % (score), True, WHITE)
+    scorerectangleangle = scoresurfing.get_rect()
+    scorerectangleangle.topleft = (WIDTH - 120, 10)
+    DISPLAY.blit(scoresurfing, scorerectangleangle)
 
 def drawWorm(snake):
-    for coord in snake:
-        x = coord['x'] * SIZE
-        y = coord['y'] * SIZE
-        wormSegmentRect = pygame.Rect(x, y, SIZE, SIZE)
-        pygame.draw.rect(DISPLAY, DARKGREEN, wormSegmentRect)
-        wormInnerSegmentRect = pygame.Rect(x + 4, y + 4, SIZE - 8, SIZE - 8)
-        pygame.draw.rect(DISPLAY, GREEN, wormInnerSegmentRect)
+    for coordinate in snake:
+        x = coordinate['x'] * SIZE
+        y = coordinate['y'] * SIZE
+        snakySegmentRect = pygame.Rect(x, y, SIZE, SIZE)
+        pygame.draw.rect(DISPLAY, DARKGREEN, snakySegmentRect)
+        snakyrectangle = pygame.Rect(x + 4, y + 4, SIZE - 8, SIZE - 8)
+        pygame.draw.rect(DISPLAY, GREEN, snakyrectangle)
 
     
 
 
-def drawApple(coord,lastApple):
-    x = coord['x'] * SIZE
-    y = coord['y'] * SIZE
+def drawApple(coordinate,lastApple):
+    x = coordinate['x'] * SIZE
+    y = coordinate['y'] * SIZE
     appleRect = pygame.Rect(x, y, SIZE, SIZE)
     pygame.draw.rect(DISPLAY, RED, appleRect)
 
